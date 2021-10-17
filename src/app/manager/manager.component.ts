@@ -17,8 +17,7 @@ import { Component, OnInit } from '@angular/core';
         mat-mini-fab
         routerLink="/inventory"
         matTooltip="Inventory"
-        aria-label="Inventory"
-      >
+        aria-label="Inventory">
         <mat-icon>list</mat-icon>
       </button>
       <button mat-mini-fab routerLink="/pos" matTooltip="POS" aria-label="POS">
