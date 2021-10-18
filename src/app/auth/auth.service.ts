@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import jwtDecode from 'jwt-decode';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, tap } from 'rxjs/operators';
 
 import { transformError } from '../common/common';
@@ -35,10 +35,27 @@ export interface IAuthService {
 export abstract class AuthService extends CacheService implements IAuthService {
   constructor() {
     super();
+    if (this.hasExpiredToken()) {
+      this.logout(true);
+    } else {
+      this.authStatus$.next(this.getAuthStatusFromToken());
+      setTimeout(() => this.resumeCurrentUser$.subscribe(), 0);
+    }
   }
 
   readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
   readonly currentUser$ = new BehaviorSubject<IUser>(new User());
+
+  private getAndUpdateUserIfAuthenticated = pipe(
+    filter((status: IAuthStatus) => status.isAuthenticated),
+    mergeMap(() => this.getCurrentUser()),
+    map((user) => this.currentUser$.next(user)),
+    catchError(transformError)
+  );
+
+  protected readonly resumeCurrentUser$ = this.authStatus$.pipe(
+    this.getAndUpdateUserIfAuthenticated
+  );
 
   login(email: string, password: string): Observable<void> {
     const loginResponse$ = this.authProvider(email, password).pipe(
@@ -49,11 +66,9 @@ export abstract class AuthService extends CacheService implements IAuthService {
       }),
 
       tap((status) => this.authStatus$.next(status)),
-      filter((status: IAuthStatus) => status.isAuthenticated),
-      mergeMap(() => this.getCurrentUser()),
-      map((user) => this.currentUser$.next(user)),
-      catchError(transformError)
+      this.getAndUpdateUserIfAuthenticated
     );
+
     loginResponse$.subscribe({
       error: (err) => {
         this.logout();
@@ -80,6 +95,19 @@ export abstract class AuthService extends CacheService implements IAuthService {
 
   protected clearToken() {
     this.removeItem('jwt');
+  }
+
+  protected hasExpiredToken(): boolean {
+    const jwt = this.getToken();
+    if (jwt) {
+      const payload = jwtDecode(jwt) as any;
+      return Date.now() >= payload.exp * 1000;
+    }
+    return true;
+  }
+
+  protected getAuthStatusFromToken(): IAuthStatus {
+    return this.transformJwtToken(jwtDecode(this.getToken()));
   }
 
   protected abstract authProvider(
