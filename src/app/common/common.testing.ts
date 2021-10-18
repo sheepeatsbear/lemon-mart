@@ -5,7 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SafeResourceUrl, SafeValue } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
+
 import { MaterialModule } from '../material.module';
 
 const FAKE_SVGS = { lemon: '<svg><path id="lemon" name="lemon"></path></svg>' };

@@ -5,11 +5,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import {
-  commonTestingModules,
-  commonTestingProviders,
   DomSanitizerFake,
   MatIconRegistryFake,
   MediaObserverFake,
+  commonTestingModules,
+  commonTestingProviders,
 } from './common/common.testing';
 
 describe('AppComponent', () => {
