@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
+
+import { Role } from '../auth/auth';
 import { AuthService } from '../auth/auth.service';
+import { UiService } from '../common/ui.service';
+import { EmailValidation, PasswordValidation } from '../common/validations';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +35,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private uiService: UiService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -46,11 +51,8 @@ export class LoginComponent implements OnInit {
 
   buildLoginForm() {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.minLength(8), Validators.maxLength(50)],
-      ],
+      email: ['', EmailValidation],
+      password: ['', PasswordValidation],
     });
   }
 
@@ -65,9 +67,26 @@ export class LoginComponent implements OnInit {
       .pipe(
         filter(([authStatus, user]) => authStatus.isAuthenticated && user?._id !== ''),
         tap(([authStatus, user]) => {
-          this.router.navigate([this.redirectUrl || '/manager']);
+          this.uiService.showToast(`Welcome ${user.fullName}! Role: ${user.role}`);
+
+          this.router.navigate([
+            this.redirectUrl || this.homeRoutePerRole(user.role as Role),
+          ]);
         })
       )
       .subscribe();
+  }
+
+  private homeRoutePerRole(role: Role) {
+    switch (role) {
+      case Role.Cashier:
+        return '/pos';
+      case Role.Clerk:
+        return '/inventory';
+      case Role.Manager:
+        return '/manager';
+      default:
+        return '/user/profile';
+    }
   }
 }
