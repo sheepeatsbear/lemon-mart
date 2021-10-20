@@ -1,8 +1,6 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { autoSpyObj } from 'angular-unit-test-helper';
 
-import { AuthService } from '../auth/auth.service';
+import { commonTestingModules } from './common.testing';
 import { UiService } from './ui.service';
 
 describe('UiService', () => {
@@ -10,8 +8,7 @@ describe('UiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService, { provide: UiService, useValue: autoSpyObj(UiService) }],
+      imports: [commonTestingModules],
     });
     service = TestBed.inject(UiService);
   });

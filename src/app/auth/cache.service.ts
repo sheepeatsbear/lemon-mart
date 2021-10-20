@@ -1,8 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
 export class CacheService {
   protected getItem<T>(key: string): T | null {
     const data = localStorage.getItem(key);
@@ -24,5 +19,4 @@ export class CacheService {
   protected clear() {
     localStorage.clear();
   }
-  constructor() {}
 }

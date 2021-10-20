@@ -5,7 +5,7 @@ import { catchError, filter, map, mergeMap, tap } from 'rxjs/operators';
 
 import { transformError } from '../common/common';
 import { IUser, User } from '../user/user/user';
-import { Role } from './auth';
+import { Role } from './auth.enum';
 import { CacheService } from './cache.service';
 
 export interface IAuthStatus {
@@ -33,6 +33,19 @@ export interface IAuthService {
 }
 @Injectable()
 export abstract class AuthService extends CacheService implements IAuthService {
+  private getAndUpdateUserIfAuthenticated = pipe(
+    filter((status: IAuthStatus) => status.isAuthenticated),
+    mergeMap(() => this.getCurrentUser()),
+    map((user) => this.currentUser$.next(user)),
+    catchError(transformError)
+  );
+
+  readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
+  readonly currentUser$ = new BehaviorSubject<IUser>(new User());
+  protected readonly resumeCurrentUser$ = this.authStatus$.pipe(
+    this.getAndUpdateUserIfAuthenticated
+  );
+
   constructor() {
     super();
     if (this.hasExpiredToken()) {
@@ -43,26 +56,20 @@ export abstract class AuthService extends CacheService implements IAuthService {
     }
   }
 
-  readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
-  readonly currentUser$ = new BehaviorSubject<IUser>(new User());
-
-  private getAndUpdateUserIfAuthenticated = pipe(
-    filter((status: IAuthStatus) => status.isAuthenticated),
-    mergeMap(() => this.getCurrentUser()),
-    map((user) => this.currentUser$.next(user)),
-    catchError(transformError)
-  );
-
-  protected readonly resumeCurrentUser$ = this.authStatus$.pipe(
-    this.getAndUpdateUserIfAuthenticated
-  );
+  protected abstract authProvider(
+    email: string,
+    password: string
+  ): Observable<IServerAuthResponse>;
+  protected abstract transformJwtToken(token: unknown): IAuthStatus;
+  protected abstract getCurrentUser(): Observable<User>;
 
   login(email: string, password: string): Observable<void> {
+    this.clearToken();
     const loginResponse$ = this.authProvider(email, password).pipe(
       map((value) => {
         this.setToken(value.accessToken);
-        const token = jwtDecode(value.accessToken);
-        return this.transformJwtToken(token);
+
+        return this.getAuthStatusFromToken();
       }),
 
       tap((status) => this.authStatus$.next(status)),
@@ -109,11 +116,4 @@ export abstract class AuthService extends CacheService implements IAuthService {
   protected getAuthStatusFromToken(): IAuthStatus {
     return this.transformJwtToken(jwtDecode(this.getToken()));
   }
-
-  protected abstract authProvider(
-    email: string,
-    password: string
-  ): Observable<IServerAuthResponse>;
-  protected abstract transformJwtToken(token: unknown): IAuthStatus;
-  protected abstract getCurrentUser(): Observable<User>;
 }

@@ -3,7 +3,7 @@ import { sign } from 'fake-jwt-sign';
 import { Observable, of, throwError } from 'rxjs';
 
 import { PhoneType, User } from '../user/user/user';
-import { Role } from './auth';
+import { Role } from './auth.enum';
 import { AuthService, IAuthStatus, IServerAuthResponse } from './auth.service';
 
 @Injectable()

@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
 
-import { Role } from '../auth/auth';
+import { Role } from '../auth/auth.enum';
 import { AuthService } from '../auth/auth.service';
 import { UiService } from '../common/ui.service';
 import { EmailValidation, PasswordValidation } from '../common/validations';

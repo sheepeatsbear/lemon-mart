@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { MaterialModule } from '../material.module';
@@ -14,6 +15,6 @@ import { UserManagementComponent } from './user-management/user-management.compo
     UserManagementComponent,
     ReceiptLookupComponent,
   ],
-  imports: [ManagerRoutingModule, MaterialModule],
+  imports: [CommonModule, ManagerRoutingModule, MaterialModule],
 })
 export class ManagerModule {}

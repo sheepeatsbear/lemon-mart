@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { UiService } from '../common/ui.service';
-import { Role } from './auth';
+import { Role } from './auth.enum';
 import { AuthService } from './auth.service';
 
 @Injectable({
