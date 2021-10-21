@@ -56,7 +56,7 @@ jobs:
       - run: npx vercel --token $VERCEL_TOKEN --platform-version 2 --prod /tmp/workspace/dist/lemon-mart --confirm
 
 workflows:
-  version: 2
+  version: 2.1
   build-test-and-deploy:
     jobs:
       - build
