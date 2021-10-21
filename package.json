@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:coverage": "npm test -- --code-coverage",
-    "fix": "npm run sf run lf",
+    "fix": "npm run sf && npm run lf",
     "style": "import-sort -l \"**/{src,tests,e2e}/**/*.ts\" && prettier --check \"**/{src,tests,e2e}/**/*.{*css,ts}\"",
     "style:fix": "import-sort --write \"**/{src,tests,e2e}/**/*.ts\" && prettier --write \"**/{src,tests,e2e}/**/*.{*css,ts}\" && js-beautify \"**/src/**/*.html\"",
     "lint": "run-p lint:ts lint:tsc",
@@ -33,7 +33,9 @@
     "docker:taillogs": "echo Web Server Logs: && cross-conf-env docker logs -f $npm_package_config_imageName",
     "docker:open": "sleep 2 && cross-conf-env open-cli http://localhost:$npm_package_config_imagePort",
     "docker:debugmessage": "echo Docker Debug Completed Successfully! Hit Ctrl+C to terminate log tailing.",
-    "docker:debug": "run-s -cs docker:build docker:run docker:open docker:debugmessage docker:taillogs"
+    "docker:debug": "run-s -cs docker:build docker:run docker:open docker:debugmessage docker:taillogs",
+    "gcloud:build": "gcloud builds submit --tag gcr.io/lemonmart123/lemonmart123 --project lemonmart123",
+    "gcloud:deploy": "gcloud run deploy --image gcr.io/lemonmart123/lemonmart123 --platform managed --project lemonmart123 --region us-east1"
   },
   "private": true,
   "dependencies": {
@@ -98,9 +100,9 @@
     }
   },
   "config": {
-    "imageRepo": "[namespace]/[repository]",
-    "imageName": "custom_app_name",
-    "imagePort": "3000",
-    "internalContainerPort": "3000"
+    "imageRepo": "pvoskou/lemonmart123",
+    "imageName": "lemonmart123",
+    "imagePort": "4000",
+    "internalContainerPort": "4000"
   }
 }
