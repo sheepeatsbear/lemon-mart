@@ -6,7 +6,8 @@ import { AuthMode } from 'src/app/auth/auth.enum';
 
 export const environment = {
   production: false,
-  authMode: AuthMode.InMemory,
+  baseUrl: 'http://localhost:3000',
+  authMode: AuthMode.Firebase,
   firebase: {
     apiKey: 'AIzaSyCZmW8L4PlnJBuw9yCzBpO5JcXeszVUTYA',
     authDomain: 'lemon-mart-85275.firebaseapp.com',
@@ -16,7 +17,6 @@ export const environment = {
     appId: '1:132912493669:web:d502cc07d4fe14c811428c',
     measurementId: 'G-YK9SJDLXL7',
   },
-  VERCEL_TOKEN: 'xlggGid7GxXJx6p4CFtOHnCo',
 };
 
 /*
