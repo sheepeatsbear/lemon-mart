@@ -36,11 +36,12 @@ jobs:
           command: tar zcf dist.tar.gz dist/lemon-mart
       - store_artifacts:
           path: dist.tar.gz
-      -run: name: Move compiled app to warkspace
-            command:
-              set -exu
-              mkdir -p /tmp/workspace/dist
-              mv dist/lemon-mart /tmp/workspace/dist
+      -run:
+          name: Move compiled app to warkspace
+          command:
+            set -exu
+            mkdir -p /tmp/workspace/dist
+            mv dist/lemon-mart /tmp/workspace/dist
       -persist_to_workspace:
         root: /tmp/workspace
         paths:
@@ -59,6 +60,6 @@ workflows:
   build-and-test-deploy:
     jobs:
       - build
-      -deploy:
+      - deploy:
         requires:
           - build
