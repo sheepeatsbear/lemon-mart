@@ -54,7 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - run: npx now --token $VERCEL_TOKEN --platform-version 2 --prod /tmp/workspace/dist/lemon-mart --confirm
+      - run: npx vercel --token $VERCEL_TOKEN --platform-version 2 --prod /tmp/workspace/dist/lemon-mart --confirm
 
 workflows:
   version: 2
