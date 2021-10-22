@@ -78,7 +78,7 @@ jobs:
           image: 'gcr.io/${GOOGLE_PROJECT_ID}/test-${CIRCLE_SHA1}'
           platform: managed
           region: us-east1
-          service-name: lemon-mart123
+          service-name: lemonmart123
           unauthenticated: true
 
 workflows:
