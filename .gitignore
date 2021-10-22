@@ -53,3 +53,5 @@ node_modules
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+.coveralls.yml
