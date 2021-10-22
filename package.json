@@ -35,7 +35,9 @@
     "docker:debugmessage": "echo Docker Debug Completed Successfully! Hit Ctrl+C to terminate log tailing.",
     "docker:debug": "run-s -cs docker:build docker:run docker:open docker:debugmessage docker:taillogs",
     "gcloud:build": "gcloud builds submit --tag gcr.io/lemonmart123/lemonmart123 --project lemonmart123",
-    "gcloud:deploy": "gcloud run deploy --image gcr.io/lemonmart123/lemonmart123 --platform managed --project lemonmart123 --region us-east1"
+    "gcloud:deploy": "gcloud run deploy --image gcr.io/lemonmart123/lemonmart123 --platform managed --project lemonmart123 --region us-east1",
+    "prenow:publish": "npm run build:prod",
+    "now:publish": "vercel --platform-version 2 dist/lemon-mart"
   },
   "private": true,
   "dependencies": {
