@@ -3398,6 +3398,17 @@
     "path-type" "^4.0.0"
     "yaml" "^1.10.0"
 
+"coveralls@^3.1.1":
+  "integrity" "sha512-+dxnG2NHncSD1NrqbSM3dn/lE57O6Qf/koe9+I7c+wzkqRmEvcp0kgJdxKInzYzkICKkFMZsX3Vct3++tsF9ww=="
+  "resolved" "https://registry.npmjs.org/coveralls/-/coveralls-3.1.1.tgz"
+  "version" "3.1.1"
+  dependencies:
+    "js-yaml" "^3.13.1"
+    "lcov-parse" "^1.0.0"
+    "log-driver" "^1.2.7"
+    "minimist" "^1.2.5"
+    "request" "^2.88.2"
+
 "critters@0.0.10":
   "integrity" "sha512-p5VKhP1803+f+0Jq5P03w1SbiHtpAKm+1EpJHkiPxQPq0Vu9QLZHviJ02GRrWi0dlcJqrmzMWInbwp4d22RsGw=="
   "resolved" "https://registry.npmjs.org/critters/-/critters-0.0.10.tgz"
@@ -6375,6 +6386,11 @@
   dependencies:
     "invert-kv" "^2.0.0"
 
+"lcov-parse@^1.0.0":
+  "integrity" "sha1-6w1GtUER68VhrLTECO+TY73I9+A="
+  "resolved" "https://registry.npmjs.org/lcov-parse/-/lcov-parse-1.0.0.tgz"
+  "version" "1.0.0"
+
 "less-loader@10.0.1":
   "integrity" "sha512-Crln//HpW9M5CbtdfWm3IO66Cvx1WhZQvNybXgfB2dD/6Sav9ppw+IWqs/FQKPBFO4B6X0X28Z0WNznshgwUzA=="
   "resolved" "https://registry.npmjs.org/less-loader/-/less-loader-10.0.1.tgz"
@@ -6531,6 +6547,11 @@
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
+
+"log-driver@^1.2.7":
+  "integrity" "sha512-U7KCmLdqsGHBLeWqYlFA0V0Sl6P08EE1ZrmA9cxjUE0WVqT9qnyVDPz1kzpFEP0jdJuFnasWIfSd7fsaNXkpbg=="
+  "resolved" "https://registry.npmjs.org/log-driver/-/log-driver-1.2.7.tgz"
+  "version" "1.2.7"
 
 "log-symbols@^4.1.0":
   "integrity" "sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg=="
