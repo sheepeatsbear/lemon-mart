@@ -17,6 +17,7 @@ export const environment = {
     appId: '1:132912493669:web:d502cc07d4fe14c811428c',
     measurementId: 'G-YK9SJDLXL7',
   },
+  VERCEL_TOKEN: 'Lx88Mj5bOBoCWQ5yv6ReTkH0',
 };
 
 /*
