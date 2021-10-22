@@ -30,7 +30,7 @@ jobs:
       - run: npm run lint
       - run: npm run build:prod
       - run: npm test -- --watch=false --code-coverage
-      - run: npm run e2e
+      # - run: npm run e2e
 
       - store_test_results:
           path: ./test_results
