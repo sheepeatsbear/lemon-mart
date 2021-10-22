@@ -93,6 +93,6 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy:
+      - deploy_cloudrun:
           requires:
             - hold
