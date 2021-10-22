@@ -6285,6 +6285,13 @@
     "istanbul-reports" "^3.0.0"
     "minimatch" "^3.0.4"
 
+"karma-htmlfile-reporter@^0.3.8":
+  "integrity" "sha512-Hd4c/vqPXYjdNYXeDJRMMq2DMMxPxqOR+TPeiLz2qbqO0qCCQMeXwFGhNDFr+GsvYhcOyn7maTbWusUFchS/4A=="
+  "resolved" "https://registry.npmjs.org/karma-htmlfile-reporter/-/karma-htmlfile-reporter-0.3.8.tgz"
+  "version" "0.3.8"
+  dependencies:
+    "xmlbuilder" "^10.0.0"
+
 "karma-jasmine-html-reporter@~1.7.0":
   "integrity" "sha512-pzum1TL7j90DTE86eFt48/s12hqwQuiD+e5aXx2Dc9wDEn2LfGq6RoAxEZZjFiN0RDSCOnosEKRZWxbQ+iMpQQ=="
   "resolved" "https://registry.npmjs.org/karma-jasmine-html-reporter/-/karma-jasmine-html-reporter-1.7.0.tgz"
@@ -6304,7 +6311,7 @@
   dependencies:
     "source-map-support" "^0.5.5"
 
-"karma@*", "karma@^6.3.0", "karma@>=0.9", "karma@~6.3.0":
+"karma@*", "karma@^6.3.0", "karma@>=0.10", "karma@>=0.9", "karma@~6.3.0":
   "integrity" "sha512-hbhRogUYIulfkBTZT7xoPrCYhRBnBoqbbL4fszWD0ReFGUxU+LYBr3dwKdAluaDQ/ynT9/7C+Lf7pPNW4gSx4Q=="
   "resolved" "https://registry.npmjs.org/karma/-/karma-6.3.4.tgz"
   "version" "6.3.4"
@@ -10963,6 +10970,11 @@
   dependencies:
     "sax" ">=0.6.0"
     "xmlbuilder" "~11.0.0"
+
+"xmlbuilder@^10.0.0":
+  "integrity" "sha512-OyzrcFLL/nb6fMGHbiRDuPup9ljBycsdCypwuyg5AAHvyWzGfChJpCXMG88AGTIMFhGZ9RccFN1e6lhg3hkwKg=="
+  "resolved" "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-10.1.1.tgz"
+  "version" "10.1.1"
 
 "xmlbuilder@~11.0.0":
   "integrity" "sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA=="
