@@ -42,11 +42,11 @@ jobs:
           command: |
             set -exu
             mkdir -p /tmp/workspace/dist
-            mv dist/local-weather-app /tmp/workspace/dist/
+            mv dist/lemon-mart /tmp/workspace/dist/
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - dist/local-weather-app
+            - dist/lemon-mart
   deploy:
     docker:
       - image: circleci/node:lts
@@ -54,7 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - run: npx now --token $VERCEL_TOKEN --platform-version 2 --prod /tmp/workspace/dist/local-weather-app --confirm
+      - run: npx now --token $VERCEL_TOKEN --platform-version 2 --prod /tmp/workspace/dist/lemon-mart --confirm
 
 workflows:
   version: 2
