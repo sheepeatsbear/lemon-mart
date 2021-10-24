@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AuthService } from 'src/app/auth/auth.service';
+import { commonTestingModules } from 'src/app/common/common.testing';
 
 import { ProfileComponent } from './profile.component';
 
@@ -8,6 +10,8 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [commonTestingModules],
+      providers: [AuthService],
       declarations: [ProfileComponent],
     }).compileComponents();
   });

@@ -10195,6 +10195,11 @@
   "resolved" "https://registry.npmjs.org/triple-beam/-/triple-beam-1.3.0.tgz"
   "version" "1.3.0"
 
+"ts-enum-util@^4.0.2":
+  "integrity" "sha512-BB5qjvHYgYgOB/CaoA1Cy/B2QNnZ+nVBrJ15VV/AXGWx+AO83k5wgeLOJvkSLoKKavvH/M8Wj4ZbgROjsuYwzw=="
+  "resolved" "https://registry.npmjs.org/ts-enum-util/-/ts-enum-util-4.0.2.tgz"
+  "version" "4.0.2"
+
 "ts.cryptojs256@^1.0.1":
   "integrity" "sha1-VqPTo7wCKtNYs+Ys2NrjIk2ThPE="
   "resolved" "https://registry.npmjs.org/ts.cryptojs256/-/ts.cryptojs256-1.0.1.tgz"
