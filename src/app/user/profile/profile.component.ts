@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { buildMapFromList } from '@angular/flex-layout/extended/typings/style/style-transforms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
