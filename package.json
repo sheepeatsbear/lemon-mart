@@ -11,7 +11,7 @@
     "test": "ng test lemon-mart --browsers Chrome",
     "test:prod": "npm test -- --browsers ChromiumNoSandbox   --  watch=false",
     "test:coverage": "npm test -- --code-coverage",
-    "fix": "npm run sf && npm run lf",
+    "fix": "npm run sf && npm run lf & npm run test",
     "style": "import-sort -l \"**/{src,tests,e2e}/**/*.ts\" && prettier --check \"**/{src,tests,e2e}/**/*.{*css,ts}\"",
     "style:fix": "import-sort --write \"**/{src,tests,e2e}/**/*.ts\" && prettier --write \"**/{src,tests,e2e}/**/*.{*css,ts}\" && js-beautify \"**/src/**/*.html\"",
     "lint": "run-p lint:ts lint:tsc",
