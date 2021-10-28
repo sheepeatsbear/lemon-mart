@@ -12,7 +12,7 @@ export const OptionalTextValidation = [Validators.minLength(2), Validators.maxLe
 export const RequiredTextValidation = OptionalTextValidation.concat([
   Validators.required,
 ]);
-export const OneCharValidaton = [Validators.minLength(1), Validators.maxLength(1)];
+export const OneCharValidation = [Validators.minLength(1), Validators.maxLength(1)];
 export const USAZipCodeValidation = [
   Validators.required,
   Validators.pattern(/^\d{5}(?:[-\s]\d{4})?$/),

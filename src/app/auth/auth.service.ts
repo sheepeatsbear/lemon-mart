@@ -36,7 +36,7 @@ export abstract class AuthService extends CacheService implements IAuthService {
   private getAndUpdateUserIfAuthenticated = pipe(
     filter((status: IAuthStatus) => status.isAuthenticated),
     mergeMap(() => this.getCurrentUser()),
-    map((user) => this.currentUser$.next(user)),
+    map((user: IUser) => this.currentUser$.next(user)),
     catchError(transformError)
   );
 
@@ -65,6 +65,8 @@ export abstract class AuthService extends CacheService implements IAuthService {
 
   login(email: string, password: string): Observable<void> {
     this.clearToken();
+    console.log(email);
+
     const loginResponse$ = this.authProvider(email, password).pipe(
       map((value) => {
         this.setToken(value.accessToken);

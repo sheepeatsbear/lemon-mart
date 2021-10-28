@@ -9,9 +9,15 @@ import { environment } from 'src/environments/environment';
 
 import { IUser, User } from './user';
 
+export interface IUsers {
+  data: IUser[];
+  total: number;
+}
+
 export interface IUserService {
   getUser(id: string): Observable<IUser>;
   updateUser(id: string, user: IUser): Observable<IUser>;
+  getUsers(pageSize: number, searchText: string, pagesToSkip: number): Observable<IUsers>;
 }
 
 @Injectable({
@@ -21,6 +27,7 @@ export class UserService extends CacheService implements IUserService {
   constructor(private httpClient: HttpClient, private authService: AuthService) {
     super();
   }
+
   getUser(id: string): Observable<IUser> {
     if (id === null) {
       return throwError('User id is not set');
@@ -33,6 +40,7 @@ export class UserService extends CacheService implements IUserService {
     }
     //cache user data in case of errors
     this.setItem('draft-user', Object.assign(user, { _id: id }));
+
     const updateResponse$ = this.httpClient
       .put<IUser>(`${environment.baseUrl}/v2/user/${id}`, user)
       .pipe(map(User.Build), catchError(transformError));
@@ -43,5 +51,26 @@ export class UserService extends CacheService implements IUserService {
       (err) => throwError(err)
     );
     return updateResponse$;
+  }
+
+  getUsers(
+    pageSize: number,
+    searchText = '',
+    pagesToSkip = 0,
+    sortColumn = '',
+    sortDirection: '' | 'asc' | 'desc' = 'asc'
+  ): Observable<IUsers> {
+    const recordsToSkip = pageSize * pagesToSkip;
+    if (sortColumn) {
+      sortColumn = sortDirection === 'desc' ? `-${sortColumn}` : sortColumn;
+    }
+    return this.httpClient.get<IUsers>(`${environment.baseUrl}/v2/users`, {
+      params: {
+        filter: searchText,
+        skip: recordsToSkip.toString(),
+        limit: pageSize.toString(),
+        sortKey: sortColumn,
+      },
+    });
   }
 }
