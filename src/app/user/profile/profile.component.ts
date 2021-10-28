@@ -18,7 +18,6 @@ import { AuthService } from '../../auth/auth.service';
 import { UiService } from '../../common/ui.service';
 import {
   EmailValidation,
-  OneCharValidation,
   OptionalTextValidation,
   RequiredTextValidation,
   USAPhoneNumberValidation,
