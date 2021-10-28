@@ -1,82 +1,156 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
-import { Role } from 'src/app/auth/auth.enum';
-import { AuthService } from 'src/app/auth/auth.service';
-import { UiService } from 'src/app/common/ui.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  EmailValidation,
-  OneCharValidaton,
-  OptionalTextValidation,
-  RequiredTextValidation,
-  USAZipCodeValidation,
-} from 'src/app/common/validations';
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { filter, map, startWith, tap } from 'rxjs/operators';
+import { BaseFormDirective } from 'src/app/common/base-form.class';
+import { SubSink } from 'subsink';
 import { $enum } from 'ts-enum-util';
 
-import { IUser, PhoneType } from '../user/user';
+import { Role } from '../../auth/auth.enum';
+import { AuthService } from '../../auth/auth.service';
+import { UiService } from '../../common/ui.service';
+import {
+  EmailValidation,
+  OptionalTextValidation,
+  RequiredTextValidation,
+  USAPhoneNumberValidation,
+  USAZipCodeValidation,
+} from '../../common/validations';
+import { ErrorSets } from '../../user-controls/field-error/field-error.directive';
+import { IName, IPhone, IUser, PhoneType, User } from '../user/user';
 import { UserService } from '../user/user.service';
-import { IUSState } from './data';
+import { IUSState, USStateFilter } from './data';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
-export class ProfileComponent implements OnInit {
-  Role = Role;
-  PhoneType = PhoneType;
-  PhoneTypes = $enum(PhoneType).getKeys();
-  formGroup!: FormGroup;
-  states$: Observable<IUSState[]> | undefined;
-  userError = '';
-  currentUserId!: string;
-
+export class ProfileComponent
+  extends BaseFormDirective<IUser>
+  implements OnInit, OnDestroy
+{
+  private get currentUserRole() {
+    return this.authService.authStatus$.value.userRole;
+  }
   constructor(
     private formBuilder: FormBuilder,
     private uiService: UiService,
     private userService: UserService,
-    private authService: AuthService
-  ) {}
-
-  ngOnInit(): void {
-    this.buildForm();
-    this.authService.currentUser$
-      .pipe(
-        filter((user) => user !== null),
-        tap((user) => {
-          this.currentUserId = user._id;
-          this.buildForm(user);
-        })
-      )
-      .subscribe();
-  }
-  private get currentUserRole() {
-    return this.authService.authStatus$.value.userRole;
+    private authService: AuthService,
+    private route: ActivatedRoute
+  ) {
+    super();
   }
 
-  buildForm(user?: IUser) {
-    this.formGroup = this.formBuilder.group({
+  Role = Role;
+  PhoneType = PhoneType;
+  PhoneTypes = $enum(PhoneType).getKeys();
+  formGroup!: FormGroup;
+  userError = '';
+  ErrorSets = ErrorSets;
+  currentUserId!: string;
+  @Input() showMaskTyped!: boolean;
+  fullName!: AbstractControl | null;
+  states$: Observable<IUSState[]> | undefined;
+  readonly nameInitialData$ = new BehaviorSubject<IName>({
+    first: '',
+    middle: '',
+    last: '',
+  });
+
+  now = new Date();
+  minDate = new Date(
+    this.now.getFullYear() - 100,
+    this.now.getMonth(),
+    this.now.getDate()
+  );
+
+  get dateOfBirth() {
+    return this.formGroup.get('dateOfBirth')?.value || this.now;
+  }
+
+  get age() {
+    return this.now.getFullYear() - this.dateOfBirth.getFullYear();
+  }
+
+  get phonesArray(): FormArray {
+    return this.formGroup.get('phones') as FormArray;
+  }
+
+  get completeName(): FormGroup {
+    return this.formGroup.get('completeName') as FormGroup;
+  }
+  private subs = new SubSink();
+
+  ngOnInit() {
+    console.log(this.formGroup);
+
+    this.formGroup = this.buildForm();
+    console.log(this.formGroup);
+
+    console.log(this.authService.currentUser$);
+
+    if (this.route.snapshot.data.user) {
+      this.patchUser(this.route.snapshot.data.user);
+    } else {
+      this.subs.sink = combineLatest([
+        this.loadFromCache(),
+        this.authService.currentUser$,
+      ])
+        .pipe(
+          filter(([cachedUser, me]) => cachedUser != null || me != null),
+          tap(([cachedUser, me]) => this.patchUser(cachedUser || me))
+        )
+        .subscribe();
+    }
+
+    console.log(this.authService.currentUser$);
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.deregisterAllForms();
+  }
+
+  patchUser(user: IUser) {
+    if (user) {
+      this.currentUserId = user._id;
+      this.patchUpdatedData(user);
+      this.nameInitialData$.next(user.name);
+    }
+  }
+
+  buildForm(initialData?: IUser | null): FormGroup {
+    const user = initialData;
+    console.log(user?.name);
+    this.currentUserId = user?._id || '';
+
+    const form = this.formBuilder.group({
       email: [
         {
-          value: user?.email || '',
+          value: (user && user.email) || '',
           disabled: this.currentUserRole !== Role.Manager,
         },
         EmailValidation,
       ],
-      name: this.formBuilder.group({
-        first: [user?.name?.first || '', RequiredTextValidation],
-        middle: [user?.name?.middle || '', OneCharValidaton],
-        last: [user?.name?.last || '', RequiredTextValidation],
-      }),
+      name: null,
       role: [
         {
-          value: user?.role || '',
+          value: (user && user.role) || '',
           disabled: this.currentUserRole !== Role.Manager,
         },
         [Validators.required],
       ],
-      dateOfBirth: [user?.dateOfBirth || '', Validators.required],
+      level: [user?.level || 0, Validators.required],
+      dateOfBirth: [(user && user.dateOfBirth) || '', Validators.required],
       address: this.formBuilder.group({
         line1: [user?.address?.line1 || '', RequiredTextValidation],
         line2: [user?.address?.line2 || '', OptionalTextValidation],
@@ -84,6 +158,77 @@ export class ProfileComponent implements OnInit {
         state: [user?.address?.state || '', RequiredTextValidation],
         zip: [user?.address?.zip || '', USAZipCodeValidation],
       }),
+      phones: this.formBuilder.array(this.buildPhoneArray(user?.phones || [])),
     });
+
+    this.states$ = form.get('address.state')?.valueChanges.pipe(
+      startWith(''),
+      map((value) => USStateFilter(value))
+    );
+    return form;
+  }
+
+  addPhone() {
+    this.phonesArray.push(this.buildPhoneFormControl(this.phonesArray.value.length + 1));
+  }
+
+  private buildPhoneArray(phones: IPhone[]) {
+    const groups = [];
+
+    if (phones?.length === 0) {
+      groups.push(this.buildPhoneFormControl(1));
+    } else {
+      phones.forEach((p) => {
+        groups.push(this.buildPhoneFormControl(p.id, p.type, p.digits));
+      });
+    }
+    return groups;
+  }
+
+  private buildPhoneFormControl(id: number, type?: string, phoneNumber?: string) {
+    return this.formBuilder.group({
+      id: [id],
+      type: [type || '', Validators.required],
+      digits: [phoneNumber || '', USAPhoneNumberValidation],
+    });
+  }
+
+  async save(form: FormGroup) {
+    this.subs.add(
+      this.userService.updateUser(this.currentUserId, form.value).subscribe(
+        (res: IUser) => {
+          this.patchUser(res);
+          this.uiService.showToast('Updated user');
+        },
+        (err: string) => (this.userError = err)
+      )
+    );
+  }
+
+  convertTypeToPhoneType(type: string): PhoneType {
+    return PhoneType[$enum(PhoneType).asKeyOrThrow(type)];
+  }
+
+  private loadFromCache(): Observable<User | null> {
+    let user = null;
+
+    try {
+      const draftUser = localStorage.getItem('draft-user');
+      if (draftUser != null) {
+        user = User.Build(JSON.parse(draftUser));
+      }
+
+      if (user) {
+        this.uiService.showToast('Loaded data from cache.');
+      }
+    } catch (err) {
+      localStorage.removeItem('draft-user');
+    }
+
+    return of(user);
+  }
+
+  clearCache() {
+    localStorage.removeItem('draft-user');
   }
 }

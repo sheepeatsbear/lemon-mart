@@ -4,6 +4,7 @@ export interface IUser {
   _id: string;
   email: string;
   name: IName;
+  completeName?: IName;
   picture: string;
   role: Role | string;
   userStatus: boolean;
@@ -59,7 +60,13 @@ export class User implements IUser {
   ) {}
 
   static Build(user: IUser) {
+    // if (user.completeName !== undefined) {
+    //   user.name = user.completeName;
+    // }
+
     if (!user) {
+      console.log('test');
+
       return new User();
     }
     if (typeof user.dateOfBirth === 'string') {
